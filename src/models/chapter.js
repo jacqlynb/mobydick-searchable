@@ -8,6 +8,10 @@ const Chapter = mongoose.model('Chapter', {
   text: {
     type: String,
     required: true
+  },
+  idNumerical: {
+    type: Number,
+    required: true
   }
 })
 
