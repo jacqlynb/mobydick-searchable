@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.5.11",
+    "react-highlight-words": "^0.16.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1"

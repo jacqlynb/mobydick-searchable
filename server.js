@@ -7,10 +7,6 @@ require('./src/db/mongoose')
 
 app.use(express.json())
 
-app.get('/', (req, res) => {  
-  res.send({ express: 'Hello from backend' })
-})
-
 app.get('/mobydick', (req, res) => {
   Chapter.find({}).sort('idNumerical').then((chapters) => {
     res.status(200).send(chapters)
@@ -19,9 +15,21 @@ app.get('/mobydick', (req, res) => {
   })
 })
 
-app.post('/', (req, res) => {  
+app.post('/mobydick-search', (req, res) => {
   console.log(req.body)
-  res.send(`I received your POST request. This is what you sent me: ${req.body.post}`)
+  Chapter.find({}).sort('idNumerical.').then((chapters) => {
+    let results = [];
+    chapters.forEach( function(chapter) {
+      if (chapter.text.toLowerCase().includes(req.body.post[0].toLowerCase()) 
+          || chapter.title.toLowerCase().includes(req.body.post[0].toLowerCase())) {
+        results.push(chapter.title.trim());
+      }
+    });
+    console.log(results);
+    res.send(results);
+  }).catch((error) => {
+    res.send(error)
+  });
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Highlighter from 'react-highlight-words';
 import './index.css';
+import logo from './assets/whale.png';
 
 class Text extends React.PureComponent {
   state = {
@@ -9,7 +11,10 @@ class Text extends React.PureComponent {
     responseToPost: '',
     title: '',
     text: '',
-    idNumerical: 0
+    idNumerical: 0,
+    searchWords: [],
+    titlesToHighlight: [],
+    chapters: null
   }
 
   constructor(props) {
@@ -21,50 +26,69 @@ class Text extends React.PureComponent {
   componentDidMount() {
     this.fetchChapters()
       .then(chapters => {
-        this.setState({chapters});
+        this.setState({
+          chapters, 
+          title: chapters[0].title,
+          text: chapters[0].text
+        });
+        console.log(chapters)
       })
       .catch((err) => console.log(err));
   }
 
   renderChapterTitles(chapter) {
-    return <a key={chapter.idNumerical} onClick={this.handleClick.bind(this, chapter)}>{chapter.title}</a>;
+    const shouldHighlight = this.state.titlesToHighlight.includes(chapter.title.trim())
+    return (
+      <a
+        key={chapter.idNumerical}
+        onClick={this.handleClick.bind(this, chapter)}
+        className={shouldHighlight ? 'highlight' : null}>
+        Chapter {chapter.title.replace('.', ':').replace('.', '')}
+      </a>
+    );
   }
   
   handleClick(chapter) {
-    console.log(chapter.title);
-    console.log(chapter.text);
-    this.setState({text: chapter.text});
+    this.setState({
+      title: chapter.title,
+      text: chapter.text
+    });
   }
   
   render() {
     const {chapters} = this.state;
-
     const chaptersMarkup = chapters == null ? null : 
       <div className="chapterTitles">
-        <p className="bookTitle">Moby Dick</p>
-        <p className="tableOfContents">Table of Contents</p>
+        <p className="tableOfContents">Search the text:</p>
+        <form onSubmit={this.handleSubmit} className="chapterSearch">
+          <input type="text" 
+                 value={this.state.searchWords} 
+                 onChange={(e) => this.setState({ searchWords: e.target.value.split(',').map(word => word.trim()) })}
+          />
+          <button type="submit">Submit</button>
+        </form>
         {chapters.map(this.renderChapterTitles)}
       </div>;
 
     return (
       <div className="App">
         {chaptersMarkup}
-        
         <div className="mainText">
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Search for:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit" className="submitButton">Submit</button>
-        </form>
-        <div className="chapterText">{this.state.text}</div>
+          <div className="titles">
+            <p className="bookTitle">Moby Dick</p>
+            <img src={logo}/>
+            <p className="mainTextTitle">Chapter {this.state.title.replace('.', ':').replace('.', '')}</p>
+          </div>
+          <div className="chapterText">
+            <Highlighter
+              highlightClassName="highlight"
+              searchWords={this.state.searchWords}
+              autoEscape={true}
+              textToHighlight={this.state.text}
+            />
+          </div>
         </div>
-        {/* <p>{this.state.responseToPost}</p> */}
+        <p>{this.state.responseToPost}</p>
       </div>
     );
   }
@@ -80,15 +104,15 @@ class Text extends React.PureComponent {
 
   handleSubmit = async e => {    
     e.preventDefault();    
-    const response = await fetch('/', {      
+    const response = await fetch('/mobydick-search', {      
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },      
-      body: JSON.stringify({ post: this.state.post }),   
+      body: JSON.stringify({ post: this.state.searchWords }),   
     })
     const body = await response.text()
-    this.setState({ responseToPost: body })
+    this.setState({ titlesToHighlight: body })
   }  
 }
 
