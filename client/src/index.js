@@ -96,7 +96,7 @@ class Text extends React.PureComponent {
   fetchChapters = async () => {
     try {
       const chapters = await fetch('/mobydick');
-      return chapters;
+      return chapters.json();
     } catch(error) {
       console.log('Error in callApi', error);
     }
