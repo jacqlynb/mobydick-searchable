@@ -96,7 +96,7 @@ class Text extends React.PureComponent {
   fetchChapters = async () => {
     try {
       const chapters = await fetch('/mobydick');
-      return chapters.json();
+      return chapters;
     } catch(error) {
       console.log('Error in callApi', error);
     }
@@ -119,3 +119,5 @@ class Text extends React.PureComponent {
 ReactDOM.render(<Text />, document.getElementById('root'))
 
 
+// line 112 prevoiusly 
+// body: JSON.stringify({ post: this.state.searchWords }),  
