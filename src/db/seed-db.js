@@ -26,7 +26,7 @@ chapters.forEach((chapter) => {
     }
   })
 
-  text = text.join(' ')
+  text = text.join(' ').replace("\r ", "");
   chapterObject = {
     title, 
     text,

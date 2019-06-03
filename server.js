@@ -35,7 +35,7 @@ app.post('/mobydick-search', (req, res) => {
 })
 
 
-// production stuff
+// *********************** for production ***********************
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'client/build')));
@@ -49,8 +49,3 @@ app.listen(port, () => console.log(`Listening on port ${port}`))
 
 // heroku start
 //"heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-
-// dev start
-// "client": "cd client && yarn start",
-//     "server": "nodemon server.js",
-//     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""

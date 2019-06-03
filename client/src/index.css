@@ -85,6 +85,7 @@ code {
 .chapterText {
   padding: 10px 140px 80px 100px;
   line-height: 30px;
+  white-space: pre-line;
   text-align: justify;
 }
 
@@ -93,7 +94,18 @@ code {
   font-weight: bold;
 }
 
+.currentTitleHighlighted {
+  font-weight: bold;
+  background: rgb(240, 240, 122);
+}
 
+.currentTitle {
+  font-weight: bold;
+}
+
+.titleHighlighted {
+  background: rgb(240, 240, 122);
+}
 
 a {
   display:block;
@@ -110,9 +122,6 @@ a {
   padding-bottom: 30px;
 }
 
-.highlight {
-  background: rgb(240, 240, 122);
-}
 
 img {
   height: 50px;

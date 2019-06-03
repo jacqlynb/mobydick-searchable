@@ -21,6 +21,7 @@ class Text extends React.PureComponent {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.renderChapterTitles = this.renderChapterTitles.bind(this);
+    // this.formatText = this.formatText.bind(this);
   }
 
   componentDidMount() {
@@ -31,18 +32,25 @@ class Text extends React.PureComponent {
           title: chapters[0].title,
           text: chapters[0].text
         });
-        console.log(chapters)
       })
       .catch((err) => console.log(err));
   }
 
   renderChapterTitles(chapter) {
-    const shouldHighlight = this.state.titlesToHighlight.includes(chapter.title.trim())
+    const shouldHighlight = this.state.titlesToHighlight.includes(chapter.title.trim());
+    const currentTitle = this.state.title.includes(chapter.title);
+    
+    let classIdentifier;
+    if (shouldHighlight && currentTitle) { classIdentifier = 'currentTitleHighlighted' }
+    else if (currentTitle && !shouldHighlight) { classIdentifier = 'currentTitle' }
+    else if (!currentTitle && shouldHighlight) { classIdentifier = 'titleHighlighted' }
+    else { classIdentifier = null }
+
     return (
       <a
         key={chapter.idNumerical}
         onClick={this.handleClick.bind(this, chapter)}
-        className={shouldHighlight ? 'highlight' : null}>
+        className={classIdentifier}>
         Chapter {chapter.title.replace('.', ':').replace('.', '')}
       </a>
     );
@@ -70,6 +78,18 @@ class Text extends React.PureComponent {
         {chapters.map(this.renderChapterTitles)}
       </div>;
 
+      const textFormatted = this.state.text.split("\r \r").join("\n\n")
+      console.log(textFormatted);
+      const textMarkup = 
+        <div className="chapterText">
+          <Highlighter
+            highlightClassName="highlight"
+            searchWords={this.state.searchWords}
+            autoEscape={true}
+            textToHighlight={textFormatted}
+          />
+        </div>
+
     return (
       <div className="App">
         {chaptersMarkup}
@@ -79,14 +99,7 @@ class Text extends React.PureComponent {
             <img src={logo}/>
             <p className="mainTextTitle">Chapter {this.state.title.replace('.', ':').replace('.', '')}</p>
           </div>
-          <div className="chapterText">
-            <Highlighter
-              highlightClassName="highlight"
-              searchWords={this.state.searchWords}
-              autoEscape={true}
-              textToHighlight={this.state.text}
-            />
-          </div>
+          {textMarkup}
         </div>
         <p>{this.state.responseToPost}</p>
       </div>
@@ -117,7 +130,3 @@ class Text extends React.PureComponent {
 }
 
 ReactDOM.render(<Text />, document.getElementById('root'))
-
-
-// line 112 prevoiusly 
-// body: JSON.stringify({ post: this.state.searchWords }),  
