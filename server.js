@@ -49,3 +49,9 @@ app.listen(port, () => console.log(`Listening on port ${port}`))
 
 // heroku start
 //"heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+
+
+// dev scripts 
+//"client": "cd client && yarn start",
+//"server": "nodemon server.js",
+// "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
